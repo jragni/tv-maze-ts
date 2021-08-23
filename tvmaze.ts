@@ -23,11 +23,12 @@ interface Show {
   image: string;
 }
 
-async function getShowsByTerm(term: string): Promise<Show> {
-  // ADD: Remove placeholder & make request to TVMaze search shows API.
+async function getShowsByTerm(
+  term: string | number | string[]
+): Promise<string> {
   const response = await axios.get(`${API_BASE_URL}?q=${term}`);
-  console.log(response);
-  return response.data[0];
+  const shows = response.data.map((showData: { show: {} }) => showData.show);
+  return shows;
 }
 // return [
 //   {
@@ -50,10 +51,11 @@ async function getShowsByTerm(term: string): Promise<Show> {
 
 /** Given list of shows, create markup for each and to DOM */
 
-function populateShows(shows) {
+function populateShows(shows: Show[]) {
   $showsList.empty();
 
   for (let show of shows) {
+    console.log(show);
     const $show = $(
       `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
