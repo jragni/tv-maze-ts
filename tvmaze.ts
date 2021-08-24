@@ -16,6 +16,8 @@ const API_BASE_URL = "https://api.tvmaze.com/search/shows";
 
 // ADD: Remove placeholder & make request to TVMaze search shows API.
 
+// Questions: what is the difference between Show?
+
 interface Show {
   id: number;
   name: string;
@@ -23,35 +25,15 @@ interface Show {
   image: string;
 }
 
-async function getShowsByTerm(
-  term: string | number | string[]
-): Promise<string> {
+async function getShowsByTerm(term: string): Promise<Show[]> {
   const response = await axios.get(`${API_BASE_URL}?q=${term}`);
-  const shows = response.data.map((showData: { show: {} }) => showData.show);
+  const shows = response.data.map((showData: { show: Show }) => showData.show);
   return shows;
 }
-// return [
-//   {
-//     id: 1767,
-//     name: "The Bletchley Circle",
-//     summary:
-//       `<p><b>The Bletchley Circle</b> follows the journey of four ordinary
-//          women with extraordinary skills that helped to end World War II.</p>
-//        <p>Set in 1952, Susan, Millie, Lucy and Jean have returned to their
-//          normal lives, modestly setting aside the part they played in
-//          producing crucial intelligence, which helped the Allies to victory
-//          and shortened the war. When Susan discovers a hidden code behind an
-//          unsolved murder she is met by skepticism from the police. She
-//          quickly realises she can only begin to crack the murders and bring
-//          the culprit to justice with her former friends.</p>`,
-//     image:
-//         "http://static.tvmaze.com/uploads/images/medium_portrait/147/369403.jpg"
-//   }
-// ]
 
 /** Given list of shows, create markup for each and to DOM */
 
-function populateShows(shows: Show[]) {
+function populateShows(shows: Show[]): void {
   $showsList.empty();
 
   for (let show of shows) {
@@ -84,7 +66,8 @@ function populateShows(shows: Show[]) {
  */
 
 async function searchForShowAndDisplay() {
-  const term = $("#searchForm-term").val();
+  // QUESTION: what is  "as" doing ?
+  const term = $("#searchForm-term").val() as string;
   const shows = await getShowsByTerm(term);
 
   $episodesArea.hide();
@@ -100,7 +83,7 @@ $searchForm.on("submit", async function (evt) {
  *      { id, name, season, number }
  */
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) {}
 
 /** Write a clear docstring for this function... */
 
